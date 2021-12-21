@@ -1,0 +1,23 @@
+{
+  "name": "open-recipe-backend",
+  "version": "1.0.0",
+  "description": "the server for open recipe platform",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js localhost 8080"
+  },
+  "dependencies": {
+    "Validator": "1.1.4",
+    "bcrypt": "5.0.1",
+    "cors": "2.8.5",
+    "express": "~4.16.1",
+    "joi": "17.4.2",
+    "jsonwebtoken": "8.5.1",
+    "mongoose": "6.0.11",
+    "multer": "1.4.4"
+  },
+  "devDependencies": {
+    "nodemon": "1.18.4"
+  },
+  "keywords": []
+}
