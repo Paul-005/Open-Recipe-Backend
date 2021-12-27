@@ -10,8 +10,6 @@ var Content = route.post("/content-edit", (req, res) => {
     var token = req.headers.token;
   }
 
-  console.log(req.files);
-
   if (token === undefined) res.redirect("/login");
 
   jwt.verify(token, "panoca_secret", function (err, decoded) {

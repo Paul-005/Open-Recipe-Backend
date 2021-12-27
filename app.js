@@ -4,10 +4,12 @@ const cors = require("cors");
 
 //file imports
 const HomePage = require("./routes/authProtector");
-const { CreateAccount, LoginAccount } = require("./routes/AuthService");
+const { CreateAccount, LoginAccount } = require("./routes/auth/AuthService");
 const Content = require("./routes/content/content-recipe");
 const recipe = require("./routes/recipes/recipiesContent");
 const recipeById = require("./routes/recipes/recipeById");
+const changePass = require("./routes/auth/changePass");
+const deleteAccount = require("./routes/auth/deleteAccount");
 
 const app = express();
 var port = process.env.PORT || 3000;
@@ -23,6 +25,8 @@ app.use(LoginAccount);
 app.use(Content);
 app.use(recipe);
 app.use(recipeById);
+app.use(changePass);
+app.use(deleteAccount);
 
 mongoose
   .connect(
