@@ -1,24 +1,28 @@
 const { Router } = require("express");
+const jwt = require("jsonwebtoken");
 const UserModal = require("../../modals/UserModal");
+const verifyUser = require("./jwtVerifier");
 
 const route = Router();
 
-const deleteAccount = route.post("/deleteAccount", async (req, res) => {
-  if (!req.body.headers) {
-    return res.send("go and login first");
+const deleteAccount = route.post(
+  "/deleteAccount",
+  verifyUser,
+  async (req, res) => {
+    try {
+      jwt.verify(req.headers.token, "panoca_secret", async function (
+        err,
+        email
+      ) {
+        if (err) return res.json({ error: err.message });
+        await UserModal.findOneAndDelete({ email });
+        return res.send("Deleted Successfully");
+      });
+    } catch (error) {
+      res.json(error.message);
+    }
   }
-  console.log(req.body.headers);
-
-  try {
-    const user = await UserModal.findOneAndDelete({
-      email: req.body.headers.email
-    });
-    res.json(user);
-  } catch (error) {
-    res.json(error.message);
-    console.log(console.error(error.message));
-  }
-});
+);
 
 module.exports = deleteAccount;
 

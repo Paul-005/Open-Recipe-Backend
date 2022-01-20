@@ -17,7 +17,7 @@ const JioValSchema = Joi.object({
   password: Joi.string().min(6).pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
 });
 
-var CreateAccount = route.post("/createAccount", async (req, res) => {
+const CreateAccount = route.post("/createAccount", async (req, res) => {
   const user = req.body;
 
   try {
@@ -62,7 +62,7 @@ var CreateAccount = route.post("/createAccount", async (req, res) => {
   };
 });
 
-var LoginAccount = route.post("/LoginAccount", (req, res) => {
+const LoginAccount = route.post("/LoginAccount", (req, res) => {
   if (req.body === "undefined") {
     res.json({ error: "Enter a valid Email and Password" });
   }
