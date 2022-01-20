@@ -1,24 +1,20 @@
 const jwt = require("jsonwebtoken");
 
 const verifyUser = (req, res, next) => {
-  if (req.headers.token) {
-    var token = req.headers.token;
-  }
+  var token = req.headers.token && req.headers.token;
 
-  if (token === undefined) res.redirect("/login");
+  if (token === undefined) res.json({ error: "Not Authenticated" });
 
   jwt.verify(token, "panoca_secret", function (err, decoded) {
     try {
       if (err) {
-        res.redirect("/login");
-        res.json({ msg: "Not autheicated" });
-        // console.log(err);
+        res.json({ error: err.message });
+      } else {
+        console.log(decoded);
+        next();
       }
-      console.log(decoded);
-
-      next();
     } catch (error) {
-      console.log(error.message);
+      res.json({ error: error.message });
     }
   });
 };

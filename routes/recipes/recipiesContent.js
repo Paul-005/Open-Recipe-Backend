@@ -14,3 +14,7 @@ const recipe = route.get("/recipes", async (req, res) => {
 });
 
 module.exports = recipe;
+
+// RecipeContent: recipes.RecipeContent,
+// recipeName: recipes.recipeName,
+// _id: recipes._id

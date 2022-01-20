@@ -21,7 +21,7 @@ var CreateAccount = route.post("/createAccount", async (req, res) => {
   const user = req.body;
 
   try {
-    const value = await JioValSchema.validateAsync({
+    await JioValSchema.validateAsync({
       email: user.email,
       password: user.password
     });
@@ -83,7 +83,7 @@ var LoginAccount = route.post("/LoginAccount", (req, res) => {
         const token = createToken(user.email);
         const { name, email } = user;
         res.json({
-          message: "Successfully logged  in",
+          message: "Successfully logged in",
           token,
           user: {
             name,

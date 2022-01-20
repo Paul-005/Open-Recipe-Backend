@@ -1,4 +1,4 @@
-var express = require("express");
+const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
@@ -8,8 +8,8 @@ const { CreateAccount, LoginAccount } = require("./routes/auth/AuthService");
 const Content = require("./routes/content/content-recipe");
 const recipe = require("./routes/recipes/recipiesContent");
 const recipeById = require("./routes/recipes/recipeById");
-const changePass = require("./routes/auth/changePass");
 const deleteAccount = require("./routes/auth/deleteAccount");
+const recipeByIdComment = require("./routes/recipes/recipeByIdComment");
 
 const app = express();
 var port = process.env.PORT || 3000;
@@ -25,7 +25,7 @@ app.use(LoginAccount);
 app.use(Content);
 app.use(recipe);
 app.use(recipeById);
-app.use(changePass);
+app.use(recipeByIdComment);
 app.use(deleteAccount);
 
 mongoose
