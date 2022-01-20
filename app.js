@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 
 //file imports
-const HomePage = require("./routes/authProtector");
 const { CreateAccount, LoginAccount } = require("./routes/auth/AuthService");
 const Content = require("./routes/content/content-recipe");
 const recipe = require("./routes/recipes/recipiesContent");
@@ -19,7 +18,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cors({ origin: "*" }));
 
 //routes
-app.use(HomePage);
 app.use(CreateAccount);
 app.use(LoginAccount);
 app.use(Content);

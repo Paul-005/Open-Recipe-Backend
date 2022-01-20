@@ -25,8 +25,7 @@ var Content = route.post("/content-edit", (req, res) => {
         recipeName,
         Incredients,
         RecipeContent,
-        email: decoded,
-        like: 0
+        email: decoded
       });
 
       RecipeData.save()
