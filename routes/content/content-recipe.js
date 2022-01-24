@@ -15,17 +15,19 @@ var Content = route.post("/content-edit", (req, res) => {
   jwt.verify(token, "panoca_secret", function (err, decoded) {
     try {
       if (err) {
-        res.redirect("/login");
-        res.json({ msg: "Not autheicated" });
+        return res.json({ msg: "Not autheicated" });
         // console.log(err);
       }
-      const { recipeName, Incredients, RecipeContent } = req.body;
+      const { recipeName, Incredients, RecipeContent, image } = req.body;
+
+      console.log(req.body);
 
       const RecipeData = new RecipeModal({
         recipeName,
         Incredients,
         RecipeContent,
-        email: decoded
+        email: decoded,
+        image
       });
 
       RecipeData.save()

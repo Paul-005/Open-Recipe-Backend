@@ -13,8 +13,8 @@ const recipeByIdComment = require("./routes/recipes/recipeByIdComment");
 const app = express();
 var port = process.env.PORT || 3000;
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: true, limit: 100000000 }));
 app.use(cors({ origin: "*" }));
 
 //routes
