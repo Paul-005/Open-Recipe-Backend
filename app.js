@@ -9,6 +9,7 @@ const recipe = require("./routes/recipes/recipiesContent");
 const recipeById = require("./routes/recipes/recipeById");
 const deleteAccount = require("./routes/auth/deleteAccount");
 const recipeByIdComment = require("./routes/recipes/recipeByIdComment");
+const proPayment = require("./routes/auth/ProPayment");
 
 const app = express();
 var port = process.env.PORT || 3000;
@@ -23,6 +24,7 @@ app.use(LoginAccount);
 app.use(Content);
 app.use(recipe);
 app.use(recipeById);
+app.use(proPayment);
 app.use(recipeByIdComment);
 app.use(deleteAccount);
 
