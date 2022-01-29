@@ -1,9 +1,9 @@
 const jwt = require("jsonwebtoken");
 
 const verifyUser = (req, res, next) => {
-  var token = req.headers.token && req.headers.token;
+  var token = req.headers.token;
 
-  if (token === undefined) res.json({ error: "Not Authenticated" });
+  if (token === undefined) return res.json({ error: "Not Authenticated" });
 
   jwt.verify(token, "panoca_secret", function (err, decoded) {
     try {

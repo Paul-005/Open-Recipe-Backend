@@ -1,13 +1,15 @@
 const { Router } = require("express");
-const stripe = require("stripe")("");
+const stripe = require("stripe")(
+  "sk_test_51JGPiESGsKLMr3E0SUPCLs7KHD5Q5MLY1SfkEGcW5cfaGKTgahKbeFtRjhn117w1qLr0pXy7Kjpk5PoYbohVnzd000RIndH1Cu"
+);
 
 const route = Router();
 
 const proPayment = route.get("/propayment", async (req, res) => {
   try {
     const session = await stripe.checkout.sessions.create({
-      success_url: "https://open-recipe.netlify.app/pro-payment/success",
-      cancel_url: "https://open-recipe.netlify.app/pro-payment/cancel",
+      success_url: "https://open-recipe-paul.vercel.app/pro-payment/success",
+      cancel_url: "https://open-recipe-paul.vercel.app/pro-payment/cancel",
       payment_method_types: ["card"],
       line_items: [
         {
