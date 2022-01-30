@@ -12,6 +12,9 @@ const UserModal = Mongoose.model("Users", {
   name: {
     type: String,
     required: true
+  },
+  recipes: {
+    type: Array
   }
 });
 

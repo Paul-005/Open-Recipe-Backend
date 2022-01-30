@@ -4,6 +4,7 @@ const RecipeModal = require("../../modals/RecipeModal");
 
 const route = express.Router();
 const jwt = require("jsonwebtoken");
+const UserModal = require("../../modals/UserModal");
 
 var Content = route.post("/content-edit", (req, res) => {
   if (req.headers.token) {
@@ -36,7 +37,23 @@ var Content = route.post("/content-edit", (req, res) => {
     } catch (error) {
       console.log(error.message);
     }
-  });
+
+const content_to_profile = async (res) => {
+  
+
+const email = decoded;
+try {
+  const recipes = await UserModal.findOneAndUpdate(email, {
+    recipes: [
+      {recipes: res.recipeName}
+    ]
+  })
+  res.json(recipes)
+} catch (error) {
+  res.json({err: error.message})
+}
+
+};
 
   console.log(req.body);
 });
