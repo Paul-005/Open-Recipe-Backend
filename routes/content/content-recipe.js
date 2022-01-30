@@ -6,12 +6,10 @@ const route = express.Router();
 const jwt = require("jsonwebtoken");
 const UserModal = require("../../modals/UserModal");
 
-var Content = route.post("/content-edit", (req, res) => {
+const Content = route.post("/content-edit", (req, res) => {
   if (req.headers.token) {
     var token = req.headers.token;
   }
-
-  if (token === undefined) res.redirect("/login");
 
   jwt.verify(token, "panoca_secret", function (err, decoded) {
     try {
@@ -20,8 +18,6 @@ var Content = route.post("/content-edit", (req, res) => {
         // console.log(err);
       }
       const { recipeName, Incredients, RecipeContent, image } = req.body;
-
-      console.log(req.body);
 
       const RecipeData = new RecipeModal({
         recipeName,
@@ -32,30 +28,23 @@ var Content = route.post("/content-edit", (req, res) => {
       });
 
       RecipeData.save()
-        .then((res) => console.log(res))
-        .catch((err) => res.json(err.message));
+        .then((res) => console.log("added", res))
+        .catch((err) => console.log(err.message));
     } catch (error) {
       console.log(error.message);
     }
-
-const content_to_profile = async (res) => {
-  
-
-const email = decoded;
-try {
-  const recipes = await UserModal.findOneAndUpdate(email, {
-    recipes: [
-      {recipes: res.recipeName}
-    ]
-  })
-  res.json(recipes)
-} catch (error) {
-  res.json({err: error.message})
-}
-
-};
-
-  console.log(req.body);
+  });
 });
 
 module.exports = Content;
+
+// const content_to_profile = async (res, email) => {
+//   try {
+//     const recipes = await UserModal.findOneAndUpdate(email, {
+//       recipes: [{ recipes: res.recipeName }]
+//     });
+//     res.json(recipes);
+//   } catch (error) {
+//     res.json({ err: error.message });
+//   }
+// };
