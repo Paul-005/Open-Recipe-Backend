@@ -7,8 +7,6 @@ const route = Router();
 const recipeById = route.get("/recipes/:id", verifyUser, async (req, res) => {
   const id = req.params.id;
 
-  console.log(req.headers.token);
-
   try {
     const recipes = await RecipeModal.findById(id);
     res.json(recipes);

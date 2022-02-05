@@ -11,6 +11,7 @@ const deleteAccount = require("./routes/auth/deleteAccount");
 const recipeByIdComment = require("./routes/recipes/recipeByIdComment");
 const proPayment = require("./routes/auth/ProPayment");
 const getUsersRecipe = require("./routes/auth/getUserRecipe");
+const deleteRecipe = require("./routes/auth/deleteRecipe");
 
 const app = express();
 var port = process.env.PORT || 3000;
@@ -29,6 +30,7 @@ app.use(proPayment);
 app.use(recipeByIdComment);
 app.use(deleteAccount);
 app.use(getUsersRecipe);
+app.use(deleteRecipe);
 
 mongoose
   .connect(
