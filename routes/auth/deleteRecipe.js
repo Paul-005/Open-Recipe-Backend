@@ -17,7 +17,7 @@ const deleteRecipe = route.get(
         .then((result) => {
           if (result.email === email) {
             RecipeModal.findByIdAndDelete(id)
-              .then(() => {})
+              .then(() => res.json("done"))
               .catch((err) => res.json({ err: err.message }));
           } else res.json({ err: "This is not Yours" });
         })
@@ -25,6 +25,7 @@ const deleteRecipe = route.get(
     } catch (error) {
       res.json({ error: error.message });
     }
+    res.end();
   }
 );
 

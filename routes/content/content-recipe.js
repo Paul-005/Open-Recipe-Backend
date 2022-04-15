@@ -24,10 +24,10 @@ const Content = route.post("/content-edit", (req, res) => {
       });
 
       RecipeData.save()
-        .then((res) => console.log(res))
-        .catch((err) => console.log(err.message));
+        .then((res) => res.json(res))
+        .catch((err) => res.json(err.message));
     } catch (error) {
-      console.log(error.message);
+      res.json(error.message);
     }
   });
 });

@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+require("dotenv").config();
 
 //file imports
 const { CreateAccount, LoginAccount } = require("./routes/auth/AuthService");
@@ -41,4 +42,5 @@ mongoose
 
 app.get("/", (req, res) => {
   res.send("<h1>Open Recipe API</h1>");
+  console.log(process.env.S3_BUCKET); //
 });
