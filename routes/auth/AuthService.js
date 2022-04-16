@@ -14,7 +14,8 @@ const createToken = (user) => {
 
 const JioValSchema = Joi.object({
   email: Joi.string().email(),
-  password: Joi.string().min(6).pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
+  password: Joi.string().min(6).pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
+  name: Joi.string().min(5)
 });
 
 const CreateAccount = route.post("/signup", async (req, res) => {
@@ -23,18 +24,18 @@ const CreateAccount = route.post("/signup", async (req, res) => {
   try {
     await JioValSchema.validateAsync({
       email: user.email,
-      password: user.password
+      password: user.password,
+      name: user.name
     });
 
     bcrypt.hash(user.password, 10, function (err, hash) {
       // Store hash in your password DB.
-      if (err) res.send("Error while hashing password", err);
-
+      if (err) return res.send("Error while hashing password", err);
       saveUsertoDB(user.email, hash, user.name);
     });
   } catch (err) {
-    console.log("val error", err.details[0].message);
-    res.json({ err: err.toString() });
+    res.json({ err: err.details[0].message });
+    res.end();
   }
 
   const saveUsertoDB = (email, hashPwd, name) => {

@@ -4,9 +4,9 @@ const RecipeModal = require("../../modals/RecipeModal");
 
 const route = express.Router();
 const jwt = require("jsonwebtoken");
-const UserModal = require("../../modals/UserModal");
+const verifyUser = require("../auth/jwtVerifier");
 
-const Content = route.post("/content-edit", (req, res) => {
+const Content = route.post("/content-edit", verifyUser, (req, res) => {
   if (req.headers.token) {
     var token = req.headers.token;
   }
