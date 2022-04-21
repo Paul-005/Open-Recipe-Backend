@@ -1,1 +1,15 @@
+name: Deploy
 
+on:
+  push:
+    branches: [master]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - run: docker build . -t paulbabu05/open-recipe
+      - run: echo "${{secrets.DOCKERHUB_SECRET}}" | docker login -u paulbabu05 --password-stdin
+      - run: docker push paulbabu05/open-recipe
