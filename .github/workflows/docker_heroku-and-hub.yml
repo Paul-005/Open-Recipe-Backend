@@ -1,0 +1,29 @@
+name: Deploy To DockerHub And Heroku
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+      - uses: actions/checkout@v2
+      
+      - name: docker build
+      - run: docker build . -t paulbabu05/open-recipe
+      
+      - name: login to dockerhub
+      - run: echo "${{secrets.DOCKERHUB_SECRET}}" | docker login -u paulbabu05 --password-stdin
+      
+      - name: docker push to dockerhub
+      - run: docker push paulbabu05/open-recipe
+      
+      - name: heroku login 
+      - run: echo "${{secrets.HEROKU_API_KEY}}" | docker login --username=${email} registry.heroku.com --password-stdin
+      
+      - name: pushing and releasing docker image to heroku
+      - run: docker push registry.heroku.com/"${{secrets.HEROKU_APP_NAME}}"/web
+      - run: heroku container:release web --app ${{secrets.HEROKU_APP_NAME}}"
