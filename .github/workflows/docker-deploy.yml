@@ -11,8 +11,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       
-      - run: docker build . -t paulbabu05/open-recipe
-      
+      - run: docker build --tag registry.heroku.com/"${{secrets.HEROKU_APP_NAME}}"/web .
+            
       - run: echo "${{secrets.DOCKERHUB_SECRET}}" | docker login -u paulbabu05 --password-stdin
       
       - run: docker push paulbabu05/open-recipe
