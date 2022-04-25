@@ -18,4 +18,4 @@ jobs:
       - run: docker build --tag registry.heroku.com/"${{secrets.HEROKU_APP_NAME}}"/web .
       - run: echo "${{secrets.HEROKU_API_KEY}}" | docker login --username=paulbabu05 registry.heroku.com --password-stdin
       - run: docker push registry.heroku.com/"${{secrets.HEROKU_APP_NAME}}"/web
-      - run: heroku container:release web --app ${{secrets.HEROKU_APP_NAME}}"
+      - run: heroku container:release web --app "${{secrets.HEROKU_APP_NAME}}"
