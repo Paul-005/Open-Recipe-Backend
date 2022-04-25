@@ -22,7 +22,7 @@ jobs:
       - run: docker push paulbabu05/open-recipe
       
       - name: heroku login 
-      - run: echo "${{secrets.HEROKU_API_KEY}}" | docker login --username=${email} registry.heroku.com --password-stdin
+      - run: echo "${{secrets.HEROKU_API_KEY}}" | docker login --username=paulbabu05 registry.heroku.com --password-stdin
       
       - name: pushing and releasing docker image to heroku
       - run: docker push registry.heroku.com/"${{secrets.HEROKU_APP_NAME}}"/web
