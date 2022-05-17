@@ -1,6 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const fileUpload = require("express-fileupload");
+
+require("dotenv").config();
 
 //file imports
 const { CreateAccount, LoginAccount } = require("./routes/auth/AuthService");
@@ -12,6 +15,7 @@ const recipeByIdComment = require("./routes/recipes/recipeByIdComment");
 const proPayment = require("./routes/auth/ProPayment");
 const getUsersRecipe = require("./routes/auth/getUserRecipe");
 const deleteRecipe = require("./routes/auth/deleteRecipe");
+const upload = require("./routes/content/file-upload");
 
 const app = express();
 var port = process.env.PORT || 3000;
@@ -19,6 +23,7 @@ var port = process.env.PORT || 3000;
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: 100000000 }));
 app.use(cors({ origin: "*" }));
+app.use(fileUpload());
 
 //routes
 app.use(CreateAccount);
@@ -31,6 +36,7 @@ app.use(recipeByIdComment);
 app.use(deleteAccount);
 app.use(getUsersRecipe);
 app.use(deleteRecipe);
+app.use(upload);
 
 mongoose
   .connect(

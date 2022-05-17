@@ -12,7 +12,7 @@ const createToken = (user) => {
   return jwt.sign(user, "panoca_secret");
 };
 
-const JioValSchema = Joi.object({
+const jioValSchema = Joi.object({
   email: Joi.string().email(),
   password: Joi.string().min(6).pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
   name: Joi.string().min(5)
@@ -22,7 +22,7 @@ const CreateAccount = route.post("/signup", async (req, res) => {
   const user = req.body;
 
   try {
-    await JioValSchema.validateAsync({
+    await jioValSchema.validateAsync({
       email: user.email,
       password: user.password,
       name: user.name
