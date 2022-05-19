@@ -18,7 +18,7 @@
     "stripe": "8.200.0"
   },
   "devDependencies": {
-    "nodemon": "1.18.4"
+    "nodemon": "^2.0.16"
   },
   "keywords": []
 }

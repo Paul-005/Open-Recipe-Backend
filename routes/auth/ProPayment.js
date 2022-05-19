@@ -4,6 +4,7 @@ const stripe = require("stripe")(
   "sk_test_51JGPiESGsKLMr3E0SUPCLs7KHD5Q5MLY1SfkEGcW5cfaGKTgahKbeFtRjhn117w1qLr0pXy7Kjpk5PoYbohVnzd000RIndH1Cu"
 );
 const jwt = require("jsonwebtoken");
+const UserModal = require("../../modals/UserModal");
 
 const route = Router();
 
@@ -21,25 +22,28 @@ const proPayment = route.get("/propayment", verifyUser, async (req, res) => {
           price_data: {
             currency: "inr",
             product_data: {
-              name: "Pro Membership"
+              name: "Pro Membership",
             },
-            unit_amount: 20000
+            unit_amount: 20000,
           },
-          quantity: 1
-        }
+          quantity: 1,
+        },
       ],
-      mode: "payment"
+      mode: "payment",
     });
-    res.json({ url: session.url, id: session.id });
 
-    try {
-      const response_of_payment = await stripe.checkout.sessions.retrieve(
-        session.id
-      );
-      console.log(response_of_payment);
-    } catch (error) {
-      res.json({ err: error.message });
-    }
+    UserModal.findOneAndUpdate(
+      { email: user_email },
+      {
+        proMember: {
+          id: session.id,
+        },
+      }
+    )
+      .then((data) => {
+        res.json({ url: session.url });
+      })
+      .catch((err) => res.status(500).json({ err: err.message }));
   } catch (error) {
     console.log(error);
     res.json({ error: error.message });

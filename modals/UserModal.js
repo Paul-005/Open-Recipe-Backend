@@ -4,18 +4,27 @@ const UserModal = Mongoose.model("Users", {
   email: {
     type: String,
     index: { unique: true },
-    required: true
+    required: true,
   },
   password: {
-    type: String
+    type: String,
+    required: true,
   },
   name: {
     type: String,
-    required: true
+    required: true,
   },
   recipes: {
-    type: Array
-  }
+    type: Array,
+  },
+  proMember: {
+    id: {
+      type: String,
+    },
+    payment: {
+      type: Boolean,
+    },
+  },
 });
 
 module.exports = UserModal;

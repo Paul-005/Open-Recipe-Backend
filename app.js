@@ -13,7 +13,7 @@ const recipeById = require("./routes/recipes/recipeById");
 const deleteAccount = require("./routes/auth/deleteAccount");
 const recipeByIdComment = require("./routes/recipes/recipeByIdComment");
 const proPayment = require("./routes/auth/ProPayment");
-const getUsersRecipe = require("./routes/auth/getUserRecipe");
+const getUsersRecipe = require("./routes/auth/getUserProfile");
 const deleteRecipe = require("./routes/auth/deleteRecipe");
 const upload = require("./routes/content/file-upload");
 
