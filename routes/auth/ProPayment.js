@@ -46,7 +46,7 @@ const proPayment = route.get("/propayment", verifyUser, async (req, res) => {
       .catch((err) => res.status(500).json({ err: err.message }));
   } catch (error) {
     console.log(error);
-    res.json({ error: error.message });
+    res.json({ error: error.message, mes: "error os stripe" });
   }
 });
 

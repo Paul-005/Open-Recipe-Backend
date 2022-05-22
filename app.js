@@ -18,7 +18,7 @@ const deleteRecipe = require("./routes/auth/deleteRecipe");
 const upload = require("./routes/content/file-upload");
 
 const app = express();
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 5000;
 
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: 100000000 }));
