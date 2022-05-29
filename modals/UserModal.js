@@ -25,6 +25,9 @@ const UserModal = Mongoose.model("Users", {
       type: Boolean,
     },
   },
+  pro: {
+    type: Boolean,
+  },
 });
 
 module.exports = UserModal;

@@ -16,9 +16,11 @@ const RecipeModal = Mongoose.model("Recipes", {
     type: String,
     required: true
   },
-  comment: { type: Array },
   like: {
     type: Number
+  },
+  pro: {
+    type: Boolean,
   }
 });
 

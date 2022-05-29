@@ -38,7 +38,8 @@ const proPayment = route.get("/propayment", verifyUser, async (req, res) => {
         proMember: {
           id: session.id,
         },
-      }
+      },
+      { pro: true }
     )
       .then((data) => {
         res.json({ url: session.url });

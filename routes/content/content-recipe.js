@@ -5,9 +5,19 @@ const RecipeModal = require("../../modals/RecipeModal");
 const route = express.Router();
 const jwt = require("jsonwebtoken");
 const verifyUser = require("../auth/jwtVerifier");
+const UserModal = require("../../modals/UserModal");
 
 const Content = route.post("/content-edit", verifyUser, (req, res) => {
   const email = jwt.decode(req.headers.token);
+
+  var userIsPro = false;
+
+  UserModal.findOne({ email })
+    .then((result) => {
+      const user = result;
+      if (user) userIsPro = true;
+    })
+    .catch((err) => res.status(500).send("server error"));
 
   const { recipeName, Incredients, RecipeContent } = req.body;
 
@@ -15,7 +25,8 @@ const Content = route.post("/content-edit", verifyUser, (req, res) => {
     recipeName,
     Incredients,
     RecipeContent,
-    email
+    email,
+    pro: userIsPro,
   });
 
   RecipeData.save()
