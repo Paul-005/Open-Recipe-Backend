@@ -3,19 +3,24 @@ const { Router } = require("express");
 const route = Router();
 
 const upload = route.post("/upload", (req, res) => {
-  res.json(req);
-  if (req.files === null) return res.json({ msg: "No file uploaded" });
-
-  const file = req.files.file;
-
-  file.mv(`${__dirname}/uploads/${file.name}`, (err) => {
-    if (err) {
-      console.error(err);
-      return res.send(err);
+    let sampleFile;
+    let uploadPath;
+  
+    if (!req.files || Object.keys(req.files).length === 0) {
+      return res.status(400).send('No files were uploaded.');
     }
-
-    res.json({ fileName: file.name, filePath: `/uploads/${file.name}` });
+  
+    // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
+    sampleFile = req.files.sampleFile;
+    uploadPath = 'uploads/recipes' + sampleFile.name;
+  
+    // Use the mv() method to place the file somewhere on your server
+    sampleFile.mv(uploadPath, function(err) {
+      if (err)
+        return res.status(500).send(err);
+  
+      res.send('File uploaded!');
+    });
   });
-});
 
 module.exports = upload;
