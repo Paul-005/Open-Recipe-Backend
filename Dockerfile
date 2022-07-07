@@ -8,7 +8,11 @@ COPY package.json .
 
 RUN npm install
 
-RUN cd public/Open_Recipe && npm install && npm run build
+WORKDIR /public/Open_Recipe
+
+RUN npm install && npm run build
+
+WORKDIR /app
 
 COPY . .
 
