@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const fileUpload = require("express-fileupload");
+const path = require("path");
 
 require("dotenv").config();
 
@@ -25,6 +26,8 @@ app.use(express.urlencoded({ extended: true, limit: 100000000 }));
 app.use(cors({ origin: "*" }));
 app.use(fileUpload());
 
+app.use(express.static(path.join(__dirname, "public", "Open_Recipe", "build")));
+
 //routes
 app.use(CreateAccount);
 app.use(LoginAccount);
@@ -46,5 +49,7 @@ mongoose
   .catch((err) => console.log(err));
 
 app.get("/", (req, res) => {
-  res.send("<h1>Open Recipe API</h1>");
+  res.sendFile(
+    path.join(__dirname, "public", "Open_Recipe", "build", "index.html")
+  );
 });
