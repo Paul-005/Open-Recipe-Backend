@@ -1,16 +1,10 @@
 FROM node:alpine
 
-WORKDIR /app
-
-RUN npm install -g serve
+WORKDIR /
 
 COPY package.json .
 
 RUN npm install
-
-WORKDIR /public/Open_Recipe
-
-RUN npm install && npm run build
 
 WORKDIR /app
 
