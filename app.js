@@ -22,7 +22,7 @@ var port = process.env.PORT || 5000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true, limit: 100000000 }));
-app.use(cors({ origin: "https://open-recipe-paul.vercel.app" }));
+app.use(cors({ origin: "*" }));
 app.use(fileUpload());
 
 //routes
