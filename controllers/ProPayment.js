@@ -1,10 +1,10 @@
 const { Router } = require("express");
-const verifyUser = require("./jwtVerifier");
+const verifyUser = require("../middlewares/jwtVerifier");
 const stripe = require("stripe")(
   "sk_test_51JGPiESGsKLMr3E0SUPCLs7KHD5Q5MLY1SfkEGcW5cfaGKTgahKbeFtRjhn117w1qLr0pXy7Kjpk5PoYbohVnzd000RIndH1Cu"
 );
 const jwt = require("jsonwebtoken");
-const UserModal = require("../../modals/UserModal");
+const UserModal = require("../modals/UserModal");
 
 const route = Router();
 

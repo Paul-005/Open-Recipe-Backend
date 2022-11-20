@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 const Joi = require("joi");
 
 //file imports
-const UserModal = require("../../modals/UserModal");
+const UserModal = require("../modals/UserModal");
 
 const route = express.Router();
 
@@ -15,7 +15,7 @@ const createToken = (user) => {
 const jioValSchema = Joi.object({
   email: Joi.string().email(),
   password: Joi.string().min(6).pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
-  name: Joi.string().min(5)
+  name: Joi.string().min(5),
 });
 
 const CreateAccount = route.post("/signup", async (req, res) => {
@@ -25,7 +25,7 @@ const CreateAccount = route.post("/signup", async (req, res) => {
     await jioValSchema.validateAsync({
       email: user.email,
       password: user.password,
-      name: user.name
+      name: user.name,
     });
 
     bcrypt.hash(user.password, 10, function (err, hash) {
@@ -42,7 +42,7 @@ const CreateAccount = route.post("/signup", async (req, res) => {
     var userToDB = {
       email,
       password: hashPwd,
-      name
+      name,
     };
 
     const UserData = new UserModal(userToDB);
@@ -57,7 +57,7 @@ const CreateAccount = route.post("/signup", async (req, res) => {
         if (err.code === 11000)
           res.json({
             error_code: err.code,
-            err: "This Account already taken."
+            err: "This Account already taken.",
           });
       });
   };
@@ -88,8 +88,8 @@ const LoginAccount = route.post("/login", (req, res) => {
           token,
           user: {
             name,
-            email
-          }
+            email,
+          },
         });
       } else {
         return res.json({ err: "Incorrect password" });

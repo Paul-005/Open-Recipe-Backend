@@ -1,10 +1,10 @@
 const express = require("express");
 
-const RecipeModal = require("../../modals/RecipeModal");
-
 const route = express.Router();
 const jwt = require("jsonwebtoken");
-const verifyUser = require("../auth/jwtVerifier");
+
+const verifyUser = require("../../middlewares/jwtVerifier");
+const RecipeModal = require("../../modals/RecipeModal");
 const UserModal = require("../../modals/UserModal");
 
 const Content = route.post("/content-edit", verifyUser, (req, res) => {

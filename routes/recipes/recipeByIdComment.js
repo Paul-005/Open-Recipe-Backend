@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const RecipeModal = require("../../modals/RecipeModal");
-const verifyUser = require("../auth/jwtVerifier");
+const verifyUser = require("../../middlewares/jwtVerifier");
 
 const route = Router();
 
@@ -22,7 +22,7 @@ const recipeByIdComment = route.post(
       const comment = commentArray();
 
       const recipes = await RecipeModal.findByIdAndUpdate(id, {
-        comment
+        comment,
       });
 
       res.json(recipes);

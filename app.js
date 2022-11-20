@@ -6,13 +6,13 @@ const fileUpload = require("express-fileupload");
 require("dotenv").config();
 
 //file imports
-const { CreateAccount, LoginAccount } = require("./routes/auth/AuthService");
+const { CreateAccount, LoginAccount } = require("./controllers/AuthService");
 const Content = require("./routes/content/content-recipe");
 const recipe = require("./routes/recipes/recipiesContent");
 const recipeById = require("./routes/recipes/recipeById");
 const deleteAccount = require("./routes/auth/deleteAccount");
 const recipeByIdComment = require("./routes/recipes/recipeByIdComment");
-const proPayment = require("./routes/auth/ProPayment");
+const proPayment = require("./controllers/ProPayment");
 const getUsersRecipe = require("./routes/auth/getUserProfile");
 const deleteRecipe = require("./routes/auth/deleteRecipe");
 const upload = require("./routes/content/file-upload");
@@ -46,5 +46,5 @@ mongoose
   .catch((err) => console.log(err));
 
 app.get("/", (req, res) => {
-  res.redirect("https://open-recipe-paul.vercel.app");
+  res.send("https://open-recipe-paul.vercel.app");
 });

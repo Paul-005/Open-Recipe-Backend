@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const verifyUser = require("./jwtVerifier");
+const verifyUser = require("../../middlewares/jwtVerifier");
 const jwt = require("jsonwebtoken");
 const RecipeModal = require("../../modals/RecipeModal");
 const UserModal = require("../../modals/UserModal");

@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const { decode } = require("jsonwebtoken");
 const RecipeModal = require("../../modals/RecipeModal");
-const verifyUser = require("./jwtVerifier");
+const verifyUser = require("../../middlewares/jwtVerifier");
 
 const route = Router();
 
