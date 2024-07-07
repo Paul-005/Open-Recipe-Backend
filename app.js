@@ -15,7 +15,7 @@ const getUsersRecipe = require("./routes/auth/getUserProfile");
 const deleteRecipe = require("./routes/auth/deleteRecipe");
 const upload = require("./routes/content/file-upload");
 
-const authRoute = require("./routes/auth/authRoute");
+const authRoute = require("./routes/authRoute");
 
 const app = express();
 var port = process.env.PORT || 5000;
