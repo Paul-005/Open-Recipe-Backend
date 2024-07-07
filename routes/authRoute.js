@@ -6,12 +6,11 @@ const deleteUser = require("../controllers/authentication/deleteUser");
 const verifyUser = require("../middlewares/jwtVerifier");
 const getUsersProfile = require("../controllers/authentication/userProfile");
 
-const router = express.Router();
+const authRoute = express.Router();
 
-router.post("/signup", regsiterUser);
-router.post("/login", loginUser);
-router.post("/deleteAccount", verifyUser, deleteUser);
-router.get("/get-users-recipe", verifyUser, getUsersProfile);
+authRoute.post("/signup", regsiterUser);
+authRoute.post("/login", loginUser);
+authRoute.post("/deleteAccount", verifyUser, deleteUser);
+authRoute.get("/get-users-recipe", verifyUser, getUsersProfile);
 
-
-module.exports = router;
+module.exports = authRoute;
