@@ -12,7 +12,10 @@ const Content = route.post("/content-edit", verifyUser, (req, res) => {
 
   var userIsPro = false;
 
-  UserModal.findOne({ email })
+  const user = UserModal;
+
+  user
+    .findOne({ email })
     .then((result) => {
       const user = result;
       if (user) userIsPro = true;
@@ -30,7 +33,23 @@ const Content = route.post("/content-edit", verifyUser, (req, res) => {
   });
 
   RecipeData.save()
-    .then((res) => res.json(res))
+    .then((data) => {
+      user
+        .findOneAndUpdate(
+          { email },
+          {
+            $push: {
+              recipes_added: {
+                recipe: data.recipeName,
+                recipe_id: data._id,
+              },
+            },
+          },
+          { new: true }
+        )
+        .then((result) => res.status(200).send(result))
+        .catch((err) => res.status(500).json(err.message));
+    })
     .catch((err) => res.json(err.message));
 });
 

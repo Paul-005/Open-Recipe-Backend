@@ -14,9 +14,6 @@ const UserModal = Mongoose.model("Users", {
     type: String,
     required: true,
   },
-  recipes: {
-    type: Array,
-  },
   proMember: {
     id: {
       type: String,
@@ -28,6 +25,16 @@ const UserModal = Mongoose.model("Users", {
   pro: {
     type: Boolean,
   },
+  recipes_added: [
+    {
+      recipe: String,
+      recipe_id: String,
+      createdAt: {
+        type: Date,
+        default: Date.now, // Set the default value to the current timestamp
+      },
+    },
+  ],
 });
 
 module.exports = UserModal;
