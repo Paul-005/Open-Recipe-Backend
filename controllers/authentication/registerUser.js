@@ -43,7 +43,6 @@ const regsiterUser = async (req, res) => {
 
     UserData.save()
       .then(({ email, name }) => {
-        console.log("created Account");
         const token = jwt.sign(user.email, "panoca_secret");
         res.json({ token, email, name });
       })

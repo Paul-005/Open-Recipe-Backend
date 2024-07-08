@@ -7,12 +7,10 @@ const verifyUser = (req, res, next) => {
 
   jwt.verify(token, "panoca_secret", function (err, decoded) {
     try {
-      if (err) {
+      if (err) 
         res.json({ error: err.message });
-      } else {
-        console.log(decoded);
+      else 
         next();
-      }
     } catch (error) {
       res.json({ error: error.message });
     }
