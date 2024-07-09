@@ -3,6 +3,9 @@ const jwt = require("jsonwebtoken");
 
 const UserModal = require("../../modals/UserModal");
 
+const jwt_token = process.env.JWT_SECRET;
+
+
 const loginUser = (req, res) => {
   if (req.body === "undefined") {
     res.json({ error: "Enter a valid Email and Password" });
@@ -17,7 +20,7 @@ const loginUser = (req, res) => {
   const pwdCompare = (hashedpassword, user) => {
     bcrypt.compare(password, hashedpassword, function (err, result) {
       if (result) {
-        const token = jwt.sign(user.email, "panoca_secret");
+        const token = jwt.sign(user.email, jwt_token);
         const { name, email } = user;
         res.status(200).json({
           message: "Successfully logged in",

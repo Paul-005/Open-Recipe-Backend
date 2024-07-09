@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
 
+const mongodb_url = process.env.MONGODB_URL;
+
 mongoose.set("strictQuery", true);
 
 const connect_db = () => {
   mongoose
-    .connect(
-      "mongodb+srv://paulbabu05:11102005@paul-cluster.4qemp.mongodb.net/Open_Recipe?retryWrites=true&w=majority"
-    )
+    .connect(mongodb_url)
     .then(() => console.log("DB connected successfully...."))
     .catch((err) => {
       console.log("Mongodb connection error: ", err);

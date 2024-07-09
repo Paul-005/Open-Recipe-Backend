@@ -10,6 +10,8 @@ const JoiValSchema = Joi.object({
   name: Joi.string().min(5),
 });
 
+const jwt_token = process.env.JWT_SECRET;
+
 const regsiterUser = async (req, res) => {
   const user = req.body;
 
@@ -43,7 +45,7 @@ const regsiterUser = async (req, res) => {
 
     UserData.save()
       .then(({ email, name }) => {
-        const token = jwt.sign(user.email, "panoca_secret");
+        const token = jwt.sign(user.email, jwt_token);
         res.json({ token, email, name });
       })
       .catch((err) => {
