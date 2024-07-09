@@ -106,6 +106,4 @@ dist
 # TernJS port file
 .tern-port
 
-personal
-secretCode.txt
-public/Open_Recipe
+uploads

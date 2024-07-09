@@ -5,19 +5,7 @@ const UserModal = require("../../modals/UserModal");
 
 const addNewRecipe = (req, res) => {
   const email = jwt.decode(req.headers.token);
-
-  var userIsPro = false;
-
   const user = UserModal;
-
-  user
-    .findOne({ email })
-    .then((result) => {
-      const user = result;
-      if (user) userIsPro = true;
-    })
-    .catch(() => res.status(500).send("server error"));
-
   const { recipeName, Incredients, RecipeContent } = req.body;
 
   const RecipeData = new RecipeModal({
@@ -25,7 +13,8 @@ const addNewRecipe = (req, res) => {
     Incredients,
     RecipeContent,
     email,
-    pro: userIsPro,
+    pro: false,
+    // thumbnail: compressedFilePath
   });
 
   RecipeData.save()
