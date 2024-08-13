@@ -35,6 +35,22 @@ const UserModal = Mongoose.model("Users", {
       },
     },
   ],
+  followers: [
+    {
+      type: Mongoose.Schema.Types.ObjectId,
+      ref: 'Users', // Reference to the User model
+    },
+  ],
+  following: [
+    {
+      type: Mongoose.Schema.Types.ObjectId,
+      ref: 'Users', // Reference to the User model
+    },
+  ],
+  createdAt: {
+    type: Date,
+    default: Date.now, // Set the default value to the current timestamp
+  }
 });
 
 module.exports = UserModal;
