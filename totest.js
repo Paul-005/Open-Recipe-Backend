@@ -5,7 +5,7 @@ const app = express();
 
 const upload = multer({ dest: 'uploads/' });
 
-app.use(cors());
+app.use(cors({ origin: "*" }));
 
 app.get('/', (req, res) => res.json({name: "nmeee"}))
 
@@ -15,6 +15,6 @@ app.post('/upload', upload.single('file'), (req, res) => {
   res.json({ message: 'File and data received' });
 });
 
-app.listen(3000, () => {
-  console.log('Server is running on port 3000');
+app.listen(4000, () => {
+  console.log('Server is running on port 4000');
 });
