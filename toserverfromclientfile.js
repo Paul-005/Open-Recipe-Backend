@@ -2,9 +2,13 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 
+const cors = require("cors");
+
+
 // Initialize the app
 const app = express();
 
+app.use(cors({ origin: "*" }));
 // Set up storage engine
 const storage = multer.diskStorage({
     destination: './uploads/', // Directory to save the uploaded files
