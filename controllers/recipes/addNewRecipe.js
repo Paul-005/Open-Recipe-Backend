@@ -2,14 +2,8 @@ const jwt = require("jsonwebtoken");
 const RecipeModal = require("../../modals/RecipeModal");
 const UserModal = require("../../modals/UserModal");
 const upload = require("../../start/recipeThumbUpload");
-const imageCompress = require("../../services/imageCompression");
-const path = require("path");
-const deleteFiles = require("../../services/deleteUploadedImages");
-const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
-const fs = require("fs");
-const s3Client = require("../../start/s3cloud");
 
-
+const cloudinary = require("cloudinary").v2;
 
 const addNewRecipe = (req, res) => {
   upload(req, res, async (err) => {
@@ -24,33 +18,19 @@ const addNewRecipe = (req, res) => {
       const email = jwt.decode(req.headers.token);
       const { recipeName, Incredients, RecipeContent } = req.body;
 
-      const id = Date.now();
-
-      // Compress the image
-      const originalPath = req.file.path;
-      const compressedFilename = `${id}_${req.file.filename}`;
-
-       imageCompress(originalPath, compressedFilename);
-
-
-
-      // Upload the compressed image to S3
-      const command = new PutObjectCommand({
-        Bucket: "recipethumb",
-        Key: compressedFilename,
-        Body: fs.readFileSync(`/home/user/Open-Recipe-Backend/uploads/${compressedFilename}`),
-        ACL: "public-read", // This makes the file publicly accessible
+      // Configuration
+      cloudinary.config({
+        cloud_name: "dqboa6lkh",
+        api_key: "138151248382695",
+        api_secret: "rwazo2w6VkRzgmmc0hU8r6J2SBA", // Click 'View API Keys' above to copy your API secret
       });
 
-      try {
-        const response = await s3Client.send(command);
-        console.log("File uploaded successfully:", response);
-      } catch (error) {
-        console.error("Error uploading file:", error);
-      }
-
-      // Remove the original file
-      // await fs.unlink(originalPath);
+      // Upload an image
+      const uploadResult = await cloudinary.uploader
+        .upload("./uploads/outputImagePath.jpg")
+        .catch((error) => {
+          console.log(error);
+        });
 
       const RecipeData = new RecipeModal({
         recipeName,
@@ -58,7 +38,7 @@ const addNewRecipe = (req, res) => {
         RecipeContent,
         email,
         pro: false,
-        thumbnail: `https://cellar-c2.services.clever-cloud.com/recipethumb/${compressedFilename}`,
+        thumbnail: uploadResult.url,
       });
 
       const savedRecipe = await RecipeData.save();
@@ -78,7 +58,7 @@ const addNewRecipe = (req, res) => {
 
       res.status(200).json({
         message: "Recipe added successfully!",
-        file: `https://cellar-c2.services.clever-cloud.com/recipethumb/${compressedFilename}`,
+        file: uploadResult.url,
         recipe: savedRecipe,
         user: updatedUser,
       });
