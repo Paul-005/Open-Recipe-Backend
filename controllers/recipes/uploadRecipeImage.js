@@ -1,16 +1,17 @@
 const multer = require("multer");
 const path = require("path");
 
-
 // Set up storage engine
 const storage = multer.diskStorage({
-    destination: './uploads/', // Directory to save the uploaded files
-    filename: function (req, file, cb) {
-        // Create a unique name for the file by appending the current timestamp
-        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-    }
-  });
-
+  destination: "./uploads/", // Directory to save the uploaded files
+  filename: function (req, file, cb) {
+    // Create a unique name for the file by appending the current timestamp
+    cb(
+      null,
+      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+    );
+  },
+});
 
 // Initialize upload variable
 const upload = multer({
@@ -56,4 +57,3 @@ const recipeThumbnail = (req, res) => {
 };
 
 module.exports = recipeThumbnail;
-

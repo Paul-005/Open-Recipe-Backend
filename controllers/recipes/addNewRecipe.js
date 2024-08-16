@@ -20,9 +20,9 @@ const addNewRecipe = (req, res) => {
 
       // Configuration
       cloudinary.config({
-        cloud_name: "dqboa6lkh",
-        api_key: "138151248382695",
-        api_secret: "rwazo2w6VkRzgmmc0hU8r6J2SBA", // Click 'View API Keys' above to copy your API secret
+        cloud_name: process.env.CLOUD_NAME,
+        api_key: process.env.API_KEY,
+        api_secret: process.env.API_SECRET, // Click 'View API Keys' above to copy your API secret
       });
 
       // Upload an image
