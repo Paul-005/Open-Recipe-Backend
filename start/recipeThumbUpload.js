@@ -2,6 +2,8 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 
+const date = Date.now() ;
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads/");
@@ -29,6 +31,6 @@ const upload = multer({
   fileFilter: function (req, file, cb) {
     checkFileType(file, cb);
   },
-}).single("myFile");
+}).single("recipeThumbnail");
 
 module.exports = upload;
