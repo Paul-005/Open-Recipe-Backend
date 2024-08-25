@@ -1,21 +1,19 @@
 const multer = require("multer");
 const path = require("path");
-const fs = require("fs");
-
-const date = Date.now() ;
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads/");
   },
   filename: (req, file, cb) => {
-    cb(null, file.originalname);
+    cb(null, "uploaded_thumbnail.jpg");
   },
 });
 
+
 function checkFileType(file, cb) {
-  const filetypes = /jpeg|jpg|png/;
-  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  const filetypes = /jpeg|jpg/;
+  const extname = filetypes.test(path.extname("uploaded_thumbnail.jpg").toLowerCase());
   const mimetype = filetypes.test(file.mimetype);
 
   if (mimetype && extname) {
@@ -31,6 +29,6 @@ const upload = multer({
   fileFilter: function (req, file, cb) {
     checkFileType(file, cb);
   },
-}).single("recipeThumbnail");
+}).single("FoodImg")
 
 module.exports = upload;

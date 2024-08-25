@@ -21,7 +21,7 @@ app.use(recipesRoute);
 // connect to mongodb
 connect_db();
 
-app.listen(port, () => console.log(`server listening on port ${port}....`));
+app.listen(port, () => console.log(`server listening on port http://localhost:${port}....`));
 
 app.get("/", (req, res) => {
   res.send("https://open-recipe-paul.vercel.app");
