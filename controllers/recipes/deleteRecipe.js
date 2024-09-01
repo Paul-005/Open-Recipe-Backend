@@ -6,18 +6,15 @@ const deleteRecipe = async (req, res) => {
     const id = req.params.id;
     const email = decode(req.headers.token);
 
-    RecipeModal.findById(id)
-      .then((result) => {
-        if (result.email === email) {
-          RecipeModal.findByIdAndDelete(id)
-            .then(() => res.json("done"))
-            .catch((err) => res.json({ err: err.message }));
-        } else {
-          return res.json({ err: "This is not Yours" });
-        }
-      })
-
-      .catch((err) => res.json({ err: err.message, status: false }));
+    RecipeModal.findById(id).then((res) => {
+      if (res.email === email) {
+        RecipeModal.findByIdAndDelete(id)
+          .then(() => res.status(200).send("success"))
+          .catch((err) => res.json(err.message));
+      } else {
+        return res.status(401).send("unautharized");
+      }
+    });
   } catch (error) {
     res.json({ error: error.message });
   }
