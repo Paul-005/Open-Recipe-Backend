@@ -16,6 +16,7 @@ const addNewRecipe = async (req, res) => {
       api_secret: process.env.API_SECRET,
     });
 
+
     // Upload an image
     const uploadResult = await cloudinary.uploader.upload(
       "./uploads/uploaded_thumbnail.jpg"
