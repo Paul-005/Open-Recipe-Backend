@@ -9,9 +9,10 @@ const upload = require("../start/recipeThumbUpload");
 
 const recipesRoute = express.Router();
 
-recipesRoute.get("/recipes", fetchAllRecipes);
-recipesRoute.get("/recipes/:id", verifyUser, recipeById);
-recipesRoute.post("/new-recipe-post", verifyUser, upload,  addNewRecipe);
-recipesRoute.get("/recipes/:id/delete", verifyUser, deleteRecipe);
+// Base route for recipes
+recipesRoute.get("/", fetchAllRecipes);
+recipesRoute.get("/:id", verifyUser, recipeById);
+recipesRoute.post("/new", verifyUser, upload, addNewRecipe);
+recipesRoute.delete("/:id", verifyUser, deleteRecipe);
 
 module.exports = recipesRoute;

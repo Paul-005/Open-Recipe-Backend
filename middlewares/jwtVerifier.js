@@ -1,20 +1,26 @@
 const jwt = require("jsonwebtoken");
 
 const verifyUser = (req, res, next) => {
-  var token = req.headers.token;
+  const token = req.headers.token;
 
-  if (token === undefined) return res.json({ error: "Not Authenticated" });
+  if (!token) {
+    return res.status(401).json({ error: "Not Authenticated" });
+  }
 
-  jwt.verify(token, "panoca_secret", function (err, decoded) {
-    try {
-      if (err) 
-        res.json({ error: err.message });
-      else 
-        next();
-    } catch (error) {
-      res.json({ error: error.message });
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || "panoca_secret");
+    
+    // If the token is just the email string, convert it to an object
+    if (typeof decoded === 'string') {
+      req.user = { email: decoded };
+    } else {
+      req.user = decoded;
     }
-  });
+    
+    next();
+  } catch (err) {
+    return res.status(401).json({ error: "Invalid token" });
+  }
 };
 
 module.exports = verifyUser;

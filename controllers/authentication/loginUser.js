@@ -3,36 +3,42 @@ const jwt = require("jsonwebtoken");
 
 const UserModal = require("../../modals/UserModal");
 
-const jwt_token = process.env.JWT_SECRET;
+const loginUser = async (req, res) => {
+  try {
+    if (!req.body || !req.body.email || !req.body.password) {
+      return res.status(400).json({ error: "Email and password are required" });
+    }
 
+    const { email, password } = req.body;
 
-const loginUser = (req, res) => {
-  if (req.body === "undefined") {
-    res.json({ error: "Enter a valid Email and Password" });
-  }
+    const user = await UserModal.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ error: "User not found. Please register first." });
+    }
 
-  var { email, password } = req.body;
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ error: "Incorrect password" });
+    }
 
-  UserModal.findOne({ email })
-    .then((res) => pwdCompare(res.password, res))
-    .catch(() => res.json({ err: "User not found. Try to register" }));
-
-  const pwdCompare = (hashedpassword, user) => {
-    bcrypt.compare(password, hashedpassword, function (err, result) {
-      if (result) {
-        const token = jwt.sign(user.email, jwt_token);
-        const { name, email } = user;
-        res.status(200).json({
-          message: "Successfully logged in",
-          token,
-          user: {
-            name,
-            email,
-          },
-        });
-      } else return res.json({ err: "Incorrect password" });
+    const secret = process.env.JWT_SECRET || "panoca_secret";
+    
+    // Create token with email in the payload
+    const token = jwt.sign({ email: user.email }, secret, { expiresIn: '24h' });
+    
+    const { name, email: userEmail } = user;
+    res.status(200).json({
+      message: "Successfully logged in",
+      token,
+      user: {
+        name,
+        email: userEmail,
+      },
     });
-  };
+  } catch (error) {
+    console.error("Login error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 };
 
 module.exports = loginUser;
