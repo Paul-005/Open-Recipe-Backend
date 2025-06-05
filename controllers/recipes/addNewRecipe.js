@@ -1,14 +1,10 @@
 const jwt = require("jsonwebtoken");
 const RecipeModal = require("../../modals/RecipeModal");
 const UserModal = require("../../modals/UserModal");
-const { handleImageUpload } = require("../../services/imageUploadService");
 
 const addNewRecipe = async (req, res) => {
   try {
     const token = req.headers.token;
-    if (!token) {
-      return res.status(401).json({ error: "No token provided" });
-    }
 
     // Verify and decode the token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -17,52 +13,54 @@ const addNewRecipe = async (req, res) => {
     }
     const email = decoded.email;
 
-    const { recipeName, Incredients, RecipeContent } = req.body;
-    
-    if (!recipeName || !RecipeContent) {
+    const { recipeName, Incredients, RecipeContent, thumbnail } = req.body;
+
+    if (!recipeName || !RecipeContent || !thumbnail || !Incredients) {
       return res.status(400).json({ error: "Recipe name and content are required" });
     }
 
-    // Handle image upload
-    let uploadResult;
-    try {
-      uploadResult = await handleImageUpload(req, res);
-    } catch (error) {
-      return res.status(400).json({ error: error.message || "Failed to upload image" });
-    }
+
 
     // Create new recipe with verified email
     const RecipeData = new RecipeModal({
       recipeName,
       Incredients,
       RecipeContent,
-      email: email,
+      email,
       pro: false,
-      thumbnail: uploadResult.secure_url, // Use secure_url from Cloudinary
+      thumbnail, // Use secure_url from Cloudinary
     });
 
-    const savedRecipe = await RecipeData.save();
-    
-    // Update user's recipes
-    const updatedUser = await UserModal.findOneAndUpdate(
-      { email: email },
-      {
-        $push: {
-          recipes_added: {
-            recipe: savedRecipe.recipeName,
-            recipe_id: savedRecipe._id,
+    try {
+      const savedRecipe = await RecipeData.save();
+
+      // Update user's recipes
+      const updatedUser = await UserModal.findOneAndUpdate(
+        { email: email },
+        {
+          $push: {
+            recipes_added: {
+              recipe: savedRecipe.recipeName,
+              recipe_id: savedRecipe._id,
+            },
           },
         },
-      },
-      { new: true }
-    );
+        { new: true }
+      );
 
-    res.status(200).json({
-      message: "Recipe added successfully!",
-      file: uploadResult.secure_url,
-      recipe: savedRecipe,
-      user: updatedUser,
-    });
+      res.status(200).json({
+        message: "Recipe added successfully!",
+        file: thumbnail,
+        recipe: savedRecipe,
+        user: updatedUser,
+        recipe_id: savedRecipe._id,
+      });
+    } catch (error) {
+      console.error("Error adding recipe:", error);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+
+
   } catch (error) {
     console.error("Error adding recipe:", error);
     if (error.name === 'JsonWebTokenError') {
