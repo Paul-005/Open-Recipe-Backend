@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const RecipeModal = require("../../modals/RecipeModal");
 const UserModal = require("../../modals/UserModal");
-const cloudinary = require("cloudinary").v2;
+const { handleImageUpload } = require("../../services/imageUploadService");
 
 const addNewRecipe = async (req, res) => {
   try {
@@ -23,35 +23,29 @@ const addNewRecipe = async (req, res) => {
       return res.status(400).json({ error: "Recipe name and content are required" });
     }
 
-    if (!req.file) {
-      return res.status(400).json({ error: "No thumbnail image provided" });
+    // Handle image upload
+    let uploadResult;
+    try {
+      uploadResult = await handleImageUpload(req, res);
+    } catch (error) {
+      return res.status(400).json({ error: error.message || "Failed to upload image" });
     }
-
-    // Configuration
-    cloudinary.config({
-      cloud_name: process.env.CLOUD_NAME,
-      api_key: process.env.API_KEY,
-      api_secret: process.env.API_SECRET,
-    });
-
-    // Upload the image from the uploaded file
-    const uploadResult = await cloudinary.uploader.upload(req.file.path);
 
     // Create new recipe with verified email
     const RecipeData = new RecipeModal({
       recipeName,
       Incredients,
       RecipeContent,
-      email: email, // Ensure email is set
+      email: email,
       pro: false,
-      thumbnail: uploadResult.url,
+      thumbnail: uploadResult.secure_url, // Use secure_url from Cloudinary
     });
 
     const savedRecipe = await RecipeData.save();
     
     // Update user's recipes
     const updatedUser = await UserModal.findOneAndUpdate(
-      { email: email }, // Use the verified email
+      { email: email },
       {
         $push: {
           recipes_added: {
@@ -65,7 +59,7 @@ const addNewRecipe = async (req, res) => {
 
     res.status(200).json({
       message: "Recipe added successfully!",
-      file: uploadResult.url,
+      file: uploadResult.secure_url,
       recipe: savedRecipe,
       user: updatedUser,
     });
@@ -77,7 +71,7 @@ const addNewRecipe = async (req, res) => {
     if (error.name === 'ValidationError') {
       return res.status(400).json({ error: error.message });
     }
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
 

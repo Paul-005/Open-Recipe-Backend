@@ -5,7 +5,7 @@ const recipeById = require("../controllers/recipes/fetchRecipeById");
 const fetchAllRecipes = require("../controllers/recipes/fetchAllRecipes");
 const addNewRecipe = require("../controllers/recipes/addNewRecipe");
 const deleteRecipe = require("../controllers/recipes/deleteRecipe");
-const upload = require("../start/recipeThumbUpload");
+const { upload } = require("../services/imageUploadService");
 
 const recipesRoute = express.Router();
 
