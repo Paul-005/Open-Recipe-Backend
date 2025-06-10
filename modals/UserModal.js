@@ -14,17 +14,6 @@ const UserModal = Mongoose.model("Users", {
     type: String,
     required: true,
   },
-  proMember: {
-    id: {
-      type: String,
-    },
-    payment: {
-      type: Boolean,
-    },
-  },
-  pro: {
-    type: Boolean,
-  },
   recipes_added: [
     {
       recipe: String,
@@ -33,18 +22,6 @@ const UserModal = Mongoose.model("Users", {
         type: Date,
         default: Date.now, // Set the default value to the current timestamp
       },
-    },
-  ],
-  followers: [
-    {
-      type: Mongoose.Schema.Types.ObjectId,
-      ref: 'Users', // Reference to the User model
-    },
-  ],
-  following: [
-    {
-      type: Mongoose.Schema.Types.ObjectId,
-      ref: 'Users', // Reference to the User model
     },
   ],
   createdAt: {

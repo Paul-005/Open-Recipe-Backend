@@ -7,6 +7,7 @@ const RecipeModal = Mongoose.model("Recipes", {
   },
   Incredients: {
     type: String,
+    required: true,
   },
   RecipeContent: {
     type: String,
@@ -15,12 +16,6 @@ const RecipeModal = Mongoose.model("Recipes", {
   email: {
     type: String,
     required: true,
-  },
-  like: {
-    type: Number,
-  },
-  pro: {
-    type: Boolean,
   },
   thumbnail: {
     type: String,

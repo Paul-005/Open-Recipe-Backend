@@ -1,17 +1,14 @@
 const express = require("express");
 
 const verifyUser = require("../middlewares/jwtVerifier");
-const recipeById = require("../controllers/recipes/fetchRecipeById");
-const fetchAllRecipes = require("../controllers/recipes/fetchAllRecipes");
-const addNewRecipe = require("../controllers/recipes/addNewRecipe");
-const deleteRecipe = require("../controllers/recipes/deleteRecipe");
+const recipeControllers = require("../controllers/recipeControllers");
 
 const recipesRoute = express.Router();
 
 // Base route for recipes
-recipesRoute.get("/", fetchAllRecipes);
-recipesRoute.get("/:id", verifyUser, recipeById);
-recipesRoute.post("/new", verifyUser, addNewRecipe);
-recipesRoute.delete("/:id", verifyUser, deleteRecipe);
+recipesRoute.get("/", recipeControllers.fetchAllRecipes);
+recipesRoute.get("/:id", verifyUser, recipeControllers.fetchRecipeById);
+recipesRoute.post("/new", verifyUser, recipeControllers.addNewRecipe);
+recipesRoute.delete("/:id", verifyUser, recipeControllers.deleteRecipe);
 
 module.exports = recipesRoute;

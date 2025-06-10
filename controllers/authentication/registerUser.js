@@ -7,7 +7,7 @@ const UserModal = require("../../modals/UserModal");
 const JoiValSchema = Joi.object({
   email: Joi.string().email(),
   password: Joi.string().min(6).pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
-  name: Joi.string().min(5),
+  name: Joi.string(),
 });
 
 const jwt_token = process.env.JWT_SECRET;
@@ -17,22 +17,6 @@ const regsiterUser = async (req, res) => {
 
   if (!user) return res.status(402);
 
-  try {
-    await JoiValSchema.validateAsync({
-      email: user.email,
-      password: user.password,
-      name: user.name,
-    });
-
-    bcrypt.hash(user.password, 10, function (err, hash) {
-      // Store hash in your password DB.
-      if (err) return res.send("Error while hashing password", err);
-      saveUsertoDB(user.email, hash, user.name);
-    });
-  } catch (err) {
-    res.json({ err: err.details[0].message });
-    res.end();
-  }
 
   const saveUsertoDB = (email, hashPwd, name) => {
     var userToDB = {
@@ -56,6 +40,25 @@ const regsiterUser = async (req, res) => {
           });
       });
   };
+
+
+  try {
+    await JoiValSchema.validateAsync({
+      email: user.email,
+      password: user.password,
+      name: user.name,
+    });
+
+    bcrypt.hash(user.password, 10, function (err, hash) {
+      // Store hash in your password DB.
+      if (err) return res.send("Error while hashing password", err);
+      saveUsertoDB(user.email, hash, user.name);
+    });
+  } catch (err) {
+    res.json({ err: err.details[0].message });
+    res.end();
+  }
+
 };
 
 module.exports = regsiterUser;
