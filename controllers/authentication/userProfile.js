@@ -18,7 +18,7 @@ const getUsersProfile = async (req, res) => {
     const recipes = await RecipeModal.find({ user_id: new ObjectId(id) });
     console.log(recipes);
 
-    return recipes;
+    return res.status(200).json(recipes);
 
   } catch (error) {
     console.error("Profile error:", error);
