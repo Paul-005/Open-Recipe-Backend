@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const UserModal = require("../../modals/UserModal");
 
 const loginUser = async (req, res) => {
+  console.log(req.body);
   try {
     if (!req.body || !req.body.email || !req.body.password) {
       return res.status(400).json({ error: "Email and password are required" });
@@ -22,10 +23,10 @@ const loginUser = async (req, res) => {
     }
 
     const secret = process.env.JWT_SECRET || "panoca_secret";
-    
+
     // Create token with email in the payload
-    const token = jwt.sign({ email: user.email }, secret, { expiresIn: '24h' });
-    
+    const token = jwt.sign({ id: user.id }, secret, { expiresIn: '24h' });
+
     const { name, email: userEmail } = user;
     res.status(200).json({
       message: "Successfully logged in",

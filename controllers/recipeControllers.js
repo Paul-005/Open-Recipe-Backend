@@ -1,5 +1,4 @@
 const RecipeModal = require("../modals/RecipeModal");
-const UserModal = require("../modals/UserModal");
 const jwt = require("jsonwebtoken");
 
 // Add new recipe
@@ -7,11 +6,10 @@ exports.addNewRecipe = async (req, res) => {
     try {
         const token = req.headers.token;
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        if (!decoded || !decoded.email) {
-            return res.status(401).json({ error: "Invalid token or email not found in token" });
+        if (!decoded || !decoded.id) {
+            return res.status(401).json({ error: "Invalid token not found in token" });
         }
-        const email = decoded.email;
-
+        const user_id = decoded.id;
         const { recipeName, Incredients, RecipeContent, thumbnail } = req.body;
 
         if (!recipeName || !RecipeContent || !thumbnail || !Incredients) {
@@ -22,32 +20,15 @@ exports.addNewRecipe = async (req, res) => {
             recipeName,
             Incredients,
             RecipeContent,
-            email,
-            pro: false,
             thumbnail,
+            user_id: user_id
         });
 
-        const savedRecipe = await RecipeData.save();
+        await RecipeData.save();
 
-        const updatedUser = await UserModal.findOneAndUpdate(
-            { email: email },
-            {
-                $push: {
-                    recipes_added: {
-                        recipe: savedRecipe.recipeName,
-                        recipe_id: savedRecipe._id,
-                    },
-                },
-            },
-            { new: true }
-        );
 
         res.status(200).json({
-            message: "Recipe added successfully!",
-            file: thumbnail,
-            recipe: savedRecipe,
-            user: updatedUser,
-            recipe_id: savedRecipe._id,
+            message: "Recipe added successfully!"
         });
     } catch (error) {
         console.error("Error adding recipe:", error);
@@ -81,10 +62,7 @@ exports.deleteRecipe = async (req, res) => {
         }
 
         await RecipeModal.findByIdAndDelete(recipeId);
-        await UserModal.findOneAndUpdate(
-            { email: userEmail },
-            { $pull: { recipes_added: { recipe_id: recipeId } } }
-        );
+
 
         res.json({ message: "Recipe deleted successfully" });
     } catch (error) {

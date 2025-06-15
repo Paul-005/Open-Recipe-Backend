@@ -14,16 +14,6 @@ const UserModal = Mongoose.model("Users", {
     type: String,
     required: true,
   },
-  recipes_added: [
-    {
-      recipe: String,
-      recipe_id: String,
-      createdAt: {
-        type: Date,
-        default: Date.now, // Set the default value to the current timestamp
-      },
-    },
-  ],
   createdAt: {
     type: Date,
     default: Date.now, // Set the default value to the current timestamp

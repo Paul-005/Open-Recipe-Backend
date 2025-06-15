@@ -10,7 +10,7 @@ const JoiValSchema = Joi.object({
   name: Joi.string(),
 });
 
-const jwt_token = process.env.JWT_SECRET;
+const secret = process.env.JWT_SECRET;
 
 const regsiterUser = async (req, res) => {
   const user = req.body;
@@ -28,9 +28,9 @@ const regsiterUser = async (req, res) => {
     const UserData = new UserModal(userToDB);
 
     UserData.save()
-      .then(({ email, name }) => {
-        const token = jwt.sign(user.email, jwt_token);
-        res.json({ token, email, name });
+      .then(({ id, name }) => {
+        const token = jwt.sign({ id: id }, secret, { expiresIn: '24h' });
+        res.json({ token, name });
       })
       .catch((err) => {
         if (err.code === 11000)
