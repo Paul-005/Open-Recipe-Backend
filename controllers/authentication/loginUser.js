@@ -4,7 +4,8 @@ const jwt = require("jsonwebtoken");
 const UserModal = require("../../modals/UserModal");
 
 const loginUser = async (req, res) => {
-  console.log(req.body);
+
+
   try {
     if (!req.body || !req.body.email || !req.body.password) {
       return res.status(400).json({ error: "Email and password are required" });
@@ -14,12 +15,12 @@ const loginUser = async (req, res) => {
 
     const user = await UserModal.findOne({ email });
     if (!user) {
-      return res.status(404).json({ error: "User not found. Please register first." });
+      return res.status(401).json({ error: "Invalid email or password" });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      return res.status(401).json({ error: "Incorrect password" });
+      return res.status(401).json({ error: "Invalid email or password" });
     }
 
     const secret = process.env.JWT_SECRET || "panoca_secret";
@@ -28,6 +29,7 @@ const loginUser = async (req, res) => {
     const token = jwt.sign({ id: user.id }, secret, { expiresIn: '24h' });
 
     const { name, email: userEmail } = user;
+
     res.status(200).json({
       message: "Successfully logged in",
       token,

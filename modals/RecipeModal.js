@@ -18,7 +18,9 @@ const RecipeModal = Mongoose.model("Recipes", {
     type: String,
     required: true,
   },
-  user_id: { type: Schema.Types.ObjectId, ref: 'Users', required: true },
+  user_id: {
+    type: Schema.Types.ObjectId, ref: 'Users', required: true,
+  },
 });
 
 module.exports = RecipeModal;

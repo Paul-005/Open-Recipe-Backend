@@ -1,3 +1,0 @@
-changed model of recipe and user
-    - now new recipe will be in recipes model user refernce
-    - recipecontroller page line 27

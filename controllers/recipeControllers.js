@@ -1,5 +1,7 @@
+const Comments = require("../modals/CommentsModal");
 const RecipeModal = require("../modals/RecipeModal");
 const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
 
 // Add new recipe
 exports.addNewRecipe = async (req, res) => {
@@ -21,7 +23,7 @@ exports.addNewRecipe = async (req, res) => {
             Incredients,
             RecipeContent,
             thumbnail,
-            user_id: user_id
+            user_id
         });
 
         await RecipeData.save();
@@ -42,39 +44,45 @@ exports.addNewRecipe = async (req, res) => {
     }
 };
 
-// Delete a recipe
-exports.deleteRecipe = async (req, res) => {
+// get a recipe by id
+exports.fetchRecipeById = async (req, res) => {
     try {
         const recipeId = req.params.id;
-        const userEmail = req.user.email;
 
-        if (!recipeId) {
-            return res.status(400).json({ error: "Recipe ID is required" });
-        }
+        // Use aggregation with $match and $lookup for optimal performance
+        const result = await RecipeModal.aggregate([
+            { $match: { _id: mongoose.Types.ObjectId(recipeId) } },
+            {
+                $lookup: {
+                    from: "comments",
+                    localField: "_id",
+                    foreignField: "recipe_id",
+                    as: "comments"
+                }
+            },
 
-        const recipe = await RecipeModal.findById(recipeId);
-        if (!recipe) {
+        ]);
+
+        if (!result || result.length === 0) {
             return res.status(404).json({ error: "Recipe not found" });
         }
 
-        if (recipe.email !== userEmail) {
-            return res.status(403).json({ error: "You don't have permission to delete this recipe" });
-        }
-
-        await RecipeModal.findByIdAndDelete(recipeId);
-
-
-        res.json({ message: "Recipe deleted successfully" });
+        res.status(200).json(result[0]);
     } catch (error) {
-        console.error("Delete recipe error:", error);
+        console.error("Error fetching recipe by id:", error);
         res.status(500).json({ error: "Internal server error" });
     }
+
+
 };
 
 // Fetch all recipes
 exports.fetchAllRecipes = async (req, res) => {
     try {
-        const recipes = await RecipeModal.find();
+        const recipes = await RecipeModal.find({}, {
+            _id: 1, recipeName: 1, RecipeContent: { $substrCP: ["$RecipeContent", 0, 20] },
+            thumbnail: 1,
+        });
         res.status(200).json(recipes);
     } catch (error) {
         console.error("Fetch all recipes error:", error.message);
@@ -82,20 +90,81 @@ exports.fetchAllRecipes = async (req, res) => {
     }
 };
 
-// Fetch recipe by ID
-exports.fetchRecipeById = async (req, res) => {
+// Fetch recipe by ID and delete it
+exports.deleteRecipe = async (req, res) => {
     try {
-        const id = req.params.id;
-        const recipe = await RecipeModal.findById(id);
+        const recipe_id = req.params.id;
+        const recipe = await RecipeModal.findById(recipe_id);
 
-        if (!recipe) {
-            return res.status(404).json({ error: "Recipe not found" });
+        const token = req.headers.token;
+        const id = jwt.verify(token, process.env.JWT_SECRET);
+
+
+        if (recipe.user_id.toString() === id) {
+            RecipeModal.findByIdAndDelete(recipe_id);
+            return res.status(200).json({ message: "Recipe deleted successfully" });
         }
 
-        res.json(recipe);
+        return res.status(404).json({ error: "Not authorized to access this recipe" });
     } catch (error) {
-        console.error("Fetch recipe by ID error:", error.message);
         res.status(500).json({ error: error.message });
     }
 };
 
+
+exports.editRecipe = async (req, res) => {
+    const recipe_id = req.params.id;
+    const recipe = await RecipeModal.findById(recipe_id);
+
+    const token = req.headers.token;
+    const { id } = jwt.verify(token, process.env.JWT_SECRET);
+
+    console.log(recipe.user_id.toString(),);
+
+    if (recipe.user_id.toString() !== id) {
+        return res.status(403).json({ error: "You don't have permission to edit this recipe" });
+    }
+
+
+    if (!recipe) {
+        return res.status(404).json({ error: "Recipe not found" });
+    }
+
+    const { recipeName, Incredients, RecipeContent, thumbnail } = req.body;
+
+
+    // make an object with the changed variables
+    const changedVariables = {};
+    if (recipeName && recipeName.trim()) {
+        changedVariables.recipeName = recipeName;
+    }
+    if (Incredients && Incredients.trim()) {
+        changedVariables.Incredients = Incredients;
+    }
+    if (RecipeContent && RecipeContent.trim()) {
+        changedVariables.RecipeContent = RecipeContent;
+    }
+    if (thumbnail && thumbnail.trim()) {
+        changedVariables.thumbnail = thumbnail;
+    }
+
+    await RecipeModal.findByIdAndUpdate(recipe_id, changedVariables, { runValidators: true }).then(() => {
+        res.status(200).json({ message: "Recipe updated successfully" });
+    }).catch((error) => {
+        res.status(500).json({ error: error.message });
+    });
+}
+
+exports.addComment = async (req, res) => {
+    const { comment } = req.body;
+    const recipe_id = req.params.id;
+    const token = req.headers.token;
+    const { id } = jwt.verify(token, process.env.JWT_SECRET);
+
+    const commentData = new Comments({ comment, recipe_id, user_id: id });
+    await commentData.save().then(() => {
+        res.status(200).json({ message: "Comment added successfully" });
+    }).catch((error) => {
+        res.status(500).json({ error: error.message });
+    });
+}
