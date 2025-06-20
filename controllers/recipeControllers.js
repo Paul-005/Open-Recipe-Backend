@@ -2,6 +2,7 @@ const Comments = require("../modals/CommentsModal");
 const RecipeModal = require("../modals/RecipeModal");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
 
 // Add new recipe
 exports.addNewRecipe = async (req, res) => {
@@ -48,6 +49,7 @@ exports.addNewRecipe = async (req, res) => {
 exports.fetchRecipeById = async (req, res) => {
     try {
         const recipeId = req.params.id;
+
 
         // Use aggregation with $match and $lookup for optimal performance
         const result = await RecipeModal.aggregate([
@@ -168,3 +170,57 @@ exports.addComment = async (req, res) => {
         res.status(500).json({ error: error.message });
     });
 }
+
+exports.deleteComment = async (req, res) => {
+    console.log(req.body);
+    const comment_id = req.params.id;
+    const token = req.headers.token;
+    const { id } = jwt.verify(token, process.env.JWT_SECRET);
+
+    if (!comment_id) {
+        return res.status(400).json({ error: "Comment ID is required" });
+    }
+
+
+    const comment = await Comments.findById(comment_id);
+
+    if (!comment) {
+        return res.status(404).json({ error: "Comment not found" });
+    }
+
+
+    if (comment.user_id.toString() !== id) {
+        return res.status(403).json({ error: "You don't have permission to delete this comment" });
+    }
+
+    await Comments.findByIdAndDelete(comment_id).then(() => {
+        res.status(200).json({ message: "Comment deleted successfully" });
+    }).catch((error) => {
+        res.status(500).json({ error: error.message });
+    });
+}
+
+exports.fetchUserRecipes = async (req, res) => {
+    if (!req.headers.token) {
+        return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    try {
+        const decoded = jwt.verify(req.headers.token, process.env.JWT_SECRET);
+        const id = decoded.id;
+
+        console.log("this is id", id);
+
+
+        const recipes = await RecipeModal.find({ user_id: ObjectId(id) }, { _id: 1, recipeName: 1 });
+        console.log(recipes);
+
+
+        return res.status(200).json(recipes);
+
+    } catch (error) {
+        console.error("Profile error:", error);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+};
+

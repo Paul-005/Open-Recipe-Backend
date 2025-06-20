@@ -6,10 +6,12 @@ const recipesRoute = express.Router();
 
 // Base route for recipes
 recipesRoute.get("/", recipeControllers.fetchAllRecipes);
-recipesRoute.get("/:id", verifyUser, recipeControllers.fetchRecipeById);
+recipesRoute.get("/get-users-recipe", verifyUser, recipeControllers.fetchUserRecipes);
 recipesRoute.post("/new", verifyUser, recipeControllers.addNewRecipe);
 recipesRoute.put("/edit/:id", verifyUser, recipeControllers.editRecipe);
-recipesRoute.delete("/:id", verifyUser, recipeControllers.deleteRecipe);
 recipesRoute.post("/comment/:id", verifyUser, recipeControllers.addComment);
+recipesRoute.delete("/comment/:id", verifyUser, recipeControllers.deleteComment);
+recipesRoute.get("/:id", verifyUser, recipeControllers.fetchRecipeById);
+recipesRoute.delete("/:id", verifyUser, recipeControllers.deleteRecipe);
 
 module.exports = recipesRoute;

@@ -28,7 +28,7 @@ const loginUser = async (req, res) => {
     // Create token with email in the payload
     const token = jwt.sign({ id: user.id }, secret, { expiresIn: '24h' });
 
-    const { name, email: userEmail } = user;
+    const { name, email: userEmail, _id } = user;
 
     res.status(200).json({
       message: "Successfully logged in",
@@ -36,6 +36,7 @@ const loginUser = async (req, res) => {
       user: {
         name,
         email: userEmail,
+        _id
       },
     });
   } catch (error) {
