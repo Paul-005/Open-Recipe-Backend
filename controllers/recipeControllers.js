@@ -95,19 +95,34 @@ exports.fetchAllRecipes = async (req, res) => {
 // Fetch recipe by ID and delete it
 exports.deleteRecipe = async (req, res) => {
     try {
-        const recipe_id = req.params.id;
-        const recipe = await RecipeModal.findById(recipe_id);
-
         const token = req.headers.token;
-        const id = jwt.verify(token, process.env.JWT_SECRET);
+        const { id } = jwt.verify(token, process.env.JWT_SECRET);
 
-
-        if (recipe.user_id.toString() === id) {
-            RecipeModal.findByIdAndDelete(recipe_id);
-            return res.status(200).json({ message: "Recipe deleted successfully" });
+        if (!id) {
+            return res.status(401).json({ error: "Unauthorized" });
         }
 
-        return res.status(404).json({ error: "Not authorized to access this recipe" });
+        const recipe_id = req.params.id;
+        if (!recipe_id) {
+            return res.status(400).json({ error: "Recipe ID is required" });
+        }
+        const recipe = await RecipeModal.findById(recipe_id);
+
+        if (!recipe) {
+            return res.status(404).json({ error: "Recipe not found" });
+        }
+
+
+        if (recipe.user_id.toString() !== id) {
+            return res.status(403).json({ error: "You don't have permission to delete this recipe" });
+        }
+
+
+        RecipeModal.findByIdAndDelete(recipe_id).then(() => {
+            return res.status(200).json({ message: "Recipe deleted successfully" });
+        }).catch((error) => {
+            return res.status(500).json({ error: error.message });
+        });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
